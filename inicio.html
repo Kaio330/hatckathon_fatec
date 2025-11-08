@@ -33,9 +33,26 @@
 
     header {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
+      justify-content: space-between;
       gap: 0.7rem;
       margin-bottom: 1.5rem;
+    }
+
+    .logout-btn {
+      background: transparent;
+      border: 1px solid var(--red);
+      color: var(--red);
+      padding: 0.5rem 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: var(--red);
+      color: #fff;
     }
 
     .logo {
@@ -233,11 +250,14 @@
 <body>
 
   <header>
-    <div class="logo">📘</div>
-    <div>
-      <h1>Sistema de Chamados - Infraestrutura</h1>
-      <p>e infraestrutura</p>
+    <div style="display: flex; align-items: flex-start; gap: 0.7rem;">
+      <div class="logo">📘</div>
+      <div>
+        <h1>Sistema de Chamados - Infraestrutura</h1>
+        <p>e infraestrutura</p>
+      </div>
     </div>
+    <button class="logout-btn" id="logoutBtn">Sair</button>
   </header>
 
   <section class="cards">
@@ -301,7 +321,7 @@
       <select id="prioridade">
         <option value="Baixa">Baixa</option>
         <option value="Média">Média</option>
-        <option value="Alta">Alta</option>
+        <option value="Alta">Altaaa</option>
       </select>
       <select id="status">
         <option value="Aberto">Aberto</option>
@@ -447,6 +467,10 @@
     document.getElementById('filterStatus').onchange = atualizarChamados;
     document.getElementById('filterCategoria').onchange = atualizarChamados;
     document.getElementById('filterPrioridade').onchange = atualizarChamados;
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      window.location.href = 'home.html';
+    });
 
     carregarChamados();
   </script>
