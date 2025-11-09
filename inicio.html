@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
   <title>Sistema de Chamados - Infraestrutura</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
@@ -87,7 +88,6 @@
     </div>
   </section>
 
-  <!-- MODAL -->
   <div class="modal" id="modal">
     <div class="modal-content">
       <h3 id="modalTitulo">Novo Chamado</h3>
@@ -122,29 +122,44 @@
     </div>
   </div>
 
-  <script>
+<script>
+    // --- 1. Selecionar TODOS os elementos ---
     const modal = document.getElementById('modal');
-    const lista = document.getElementById('listaChamados');
-    const total = document.getElementById('total');
-    const abertos = document.getElementById('abertos');
-    const andamento = document.getElementById('andamento');
-    const resolvidos = document.getElementById('resolvidos');
-    const salvarBtn = document.getElementById('salvar');
+    const listaChamados = document.getElementById('listaChamados');
+    
+    // Botões principais
+    const novoChamadoBtn = document.getElementById('novoChamadoBtn'); // O botão de abrir
+    const cancelarBtn = document.getElementById('cancelar');     // O botão de cancelar
+    const salvarBtn = document.getElementById('salvar');         // O botão de salvar
+    
+    // Campos do formulário
     const modalTitulo = document.getElementById('modalTitulo');
+    const tituloInput = document.getElementById('titulo');
+    const descricaoInput = document.getElementById('descricao');
+    // ... (adicione outros campos se precisar)
 
-    let chamados = [];
-    let editIndex = null;
-
-    function salvarChamados() {
-      localStorage.setItem('chamados', JSON.stringify(chamados));
+    // --- 2. Funções para controlar o Modal ---
+    
+    /**
+     * Função para MOSTRAR o modal
+     * O CSS original tem "display: none".
+     * Nós mudamos o estilo direto para "display: flex" para mostrá-lo.
+     */
+    function abrirModal() {
+      modal.style.display = 'flex';
     }
-
-    function carregarChamados() {
-      const salvos = localStorage.getItem('chamados');
-      if (salvos) {
-        chamados = JSON.parse(salvos);
-        atualizarChamados();
-      }
+    
+    /**
+     * Função para ESCONDER o modal
+     */
+    function fecharModal() {
+      modal.style.display = 'none';
+      
+      // Opcional: Limpar o formulário ao fechar
+      modalTitulo.innerText = "Novo Chamado";
+      tituloInput.value = "";
+      descricaoInput.value = "";
+      // ... limpar outros campos
     }
 
     document.getElementById('novoChamadoBtn').onclick = () => {
@@ -213,77 +228,36 @@
       editIndex = index;
     }
 
-    function excluirChamado(index) {
-      if (confirm("Tem certeza que deseja excluir este chamado?")) {
-        chamados.splice(index, 1);
-        salvarChamados();
-        atualizarChamados();
-      }
-    }
+    // --- 4. Funções Principais do App ---
 
-    function atualizarChamados() {
-      lista.innerHTML = "";
-      const fs = document.getElementById('filterStatus').value;
-      const fc = document.getElementById('filterCategoria').value;
-      const fp = document.getElementById('filterPrioridade').value;
-
-      const filtrados = chamados.filter(c =>
-        (fs === "todos" || c.status === fs) &&
-        (fc === "todas" || c.categoria === fc) &&
-        (fp === "todas" || c.prioridade === fp)
-      );
-
-      if (filtrados.length === 0) {
-        lista.className = "empty";
-        lista.textContent = "Nenhum chamado encontrado com os filtros selecionados.";
+    /**
+     * Função para carregar/renderizar os chamados
+     * (Você precisa implementar a lógica de buscar do localStorage ou API)
+     */
+    function carregarChamados() {
+      // Limpa a lista antes de carregar
+      listaChamados.innerHTML = ""; 
+      
+      // ... (Sua lógica para buscar dados e criar os cards) ...
+      
+      // Exemplo de como mostrar/esconder a msg "Nenhum chamado"
+      // Se, após buscar os dados, a lista estiver vazia:
+      const temChamados = listaChamados.querySelector('.chamado');
+      
+      if (!temChamados) {
+        listaChamados.classList.add('empty');
+        listaChamados.innerHTML = '<div class="empty">Nenhum chamado encontrado.</div>';
       } else {
-        lista.className = "";
-        filtrados.forEach((c, index) => {
-          const div = document.createElement("div");
-          div.className = "chamado";
-          const anexoHtml = c.anexo ? `<img src="${c.anexo}" alt="Anexo" class="chamado-anexo">` : '';
-
-          div.innerHTML = `
-            <div class="chamado-header">
-              <span><strong>#${index + 1}</strong></span>
-              <span class="status ${c.status.replace(' ', '')}">${c.status}</span>
-            </div>
-            <strong>${c.titulo}</strong>
-            <p class="descricao">${c.descricao || "—"}</p>
-            ${anexoHtml}
-            <div class="detalhes">
-              <span>📍 ${c.local || "Local não informado"}</span>
-              <span>⚙️ ${c.categoria}</span>
-              <span>⚠️ ${c.prioridade}</span>
-              <span>⏰ ${c.data}</span>
-            </div>
-            <p class="criador">Criado por: ${c.criador || "Anônimo"}</p>
-            <div class="acoes">
-              <button class="edit" onclick="editarChamado(${index})">✏️</button>
-              <button class="delete" onclick="excluirChamado(${index})">🗑️</button>
-            </div>
-          `;
-          lista.appendChild(div);
-        });
+        listaChamados.classList.remove('empty');
       }
-
-      total.textContent = chamados.length;
-      abertos.textContent = chamados.filter(c => c.status === "Aberto").length;
-      andamento.textContent = chamados.filter(c => c.status === "Em Andamento").length;
-      resolvidos.textContent = chamados.filter(c => c.status === "Resolvido").length;
     }
 
-    document.getElementById('filterStatus').onchange = atualizarChamados;
-    document.getElementById('filterCategoria').onchange = atualizarChamados;
-    document.getElementById('filterPrioridade').onchange = atualizarChamados;
-
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      window.location.href = 'home.html';
-    });
-
+    // --- 5. Inicialização ---
+    // Carrega os chamados assim que a página abre
     carregarChamados();
 
-    feather.replace();
   </script>
+</body>
+</html>
 </body>
 </html>

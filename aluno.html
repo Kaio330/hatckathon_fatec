@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Chamados - Aluno</title>
+  <style>
+    :root {
+      --primary: #0a0a23;
+      --bg: #f8f9fc;
+      --card-bg: #fff;
+      --border: #e3e6ed;
+      --text: #333;
+      --muted: #666;
+      --green: #27ae60;
+      --red: #e74c3c;
+      --yellow: #f1c40f;
+    }
+
+    * { box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; margin: 0; padding: 0; }
+
+    body { background: var(--bg); color: var(--text); padding: 1rem; }
+
+    header { display: flex; align-items: flex-start; gap: 0.7rem; margin-bottom: 1.5rem; }
+
+    .logo { background: #e8f1ff; padding: 0.6rem; border-radius: 8px; font-size: 1.5rem; }
+
+    header h1 { font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
+    header p { font-size: 0.85rem; color: var(--muted); }
+
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      cursor: pointer;
+      display: block;
+      margin: 0 auto 2rem;
+      font-size: 0.95rem;
+      transition: 0.3s;
+    }
+
+    .btn:hover { opacity: 0.9; }
+
+    .section {
+      background: var(--card-bg);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+    }
+
+    .section h2 { font-size: 1rem; margin-bottom: 0.4rem; }
+    .section p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; }
+
+    .chamado {
+      border: 1px solid #ddd;
+      background: #fff;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      position: relative;
+    }
+
+    .status-tag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 0.75rem;
+    }
+
+    .Aberto { background: var(--red); }
+    .Em\ Andamento { background: var(--yellow); color: #000; }
+    .Resolvido { background: var(--green); }
+
+    .chamado small { color: var(--muted); }
+
+    .actions {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .actions button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .edit { color: #007bff; }
+    .delete { color: #e74c3c; }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .modal-content h3 { margin-bottom: 1rem; }
+
+    .modal-content input, .modal-content select, .modal-content textarea {
+      width: 100%;
+      margin-bottom: 0.8rem;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .modal-content button {
+      width: 48%;
+      padding: 0.6rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .cancel { background: #ccc; }
+    .save { background: var(--primary); color: #fff; }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">🎓</div>
+    <div>
+      <h1>Sistema de Chamados - Aluno</h1>
+      <p>Envie e gerencie suas solicitações de infraestrutura</p>
+    </div>
+  </header>
+
+  <button class="btn" id="novoChamadoBtn">+ Enviar Novo Chamado</button>
+
+  <section class="section">
+    <h2>Meus Chamados</h2>
+    <div id="listaChamados"></div>
+  </section>
+
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h3 id="modalTitulo">Novo Chamado</h3>
+      <input type="text" id="alunoNome" placeholder="Seu nome" required>
+      <input type="text" id="titulo" placeholder="Título do chamado" required>
+      <textarea id="descricao" placeholder="Descreva o problema..." rows="3" required></textarea>
+      <input type="text" id="local" placeholder="Local (ex: Bloco A - Sala 205)" required>
+
+      <select id="categoria">
+        <option value="Rede">Rede</option>
+        <option value="Hardware">Hardware</option>
+        <option value="Software">Software</option>
+        <option value="Elétrica">Elétrica</option>
+        <option value="Climatização">Climatização</option>
+      </select>
+
+      <select id="status">
+        <option value="Aberto">Aberto</option>
+        <option value="Em Andamento">Em Andamento</option>
+        <option value="Resolvido">Resolvido</option>
+      </select>
+
+      <div style="display:flex;justify-content:space-between;">
+        <button class="cancel" id="cancelar">Cancelar</button>
+        <button class="save" id="salvar">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const chamados = JSON.parse(localStorage.getItem('chamados') || '[]');
+    let editIndex = null;
+    const modal = document.getElementById('modal');
+    const lista = document.getElementById('listaChamados');
+
+    document.getElementById('novoChamadoBtn').onclick = () => {
+      editIndex = null;
+      document.getElementById('modalTitulo').textContent = "Novo Chamado";
+      modal.style.display = 'flex';
+    };
+    document.getElementById('cancelar').onclick = () => modal.style.display = 'none';
+
+    document.getElementById('salvar').onclick = () => {
+      const aluno = document.getElementById('alunoNome').value.trim();
+      const titulo = document.getElementById('titulo').value.trim();
+      const descricao = document.getElementById('descricao').value.trim();
+      const local = document.getElementById('local').value.trim();
+      const categoria = document.getElementById('categoria').value;
+      const status = document.getElementById('status').value;
+
+      if (!aluno || !titulo || !descricao || !local) {
+        return alert("Preencha todos os campos!");
+      }
+
+      const data = new Date().toLocaleString('pt-BR');
+      const chamado = { aluno, titulo, descricao, local, categoria, prioridade: "Média", status, data };
+
+      if (editIndex !== null) {
+        chamados[editIndex] = chamado;
+      } else {
+        chamados.push(chamado);
+      }
+
+      localStorage.setItem('chamados', JSON.stringify(chamados));
+      modal.style.display = 'none';
+      atualizarChamados();
+    };
+
+    function atualizarChamados() {
+      lista.innerHTML = "";
+      const alunoAtual = prompt("Digite seu nome para ver seus chamados:")?.trim();
+      if (!alunoAtual) return;
+
+      const meusChamados = chamados.filter(c => c.aluno === alunoAtual);
+
+      if (meusChamados.length === 0) {
+        lista.innerHTML = "<p style='text-align:center;color:#999;'>Nenhum chamado encontrado.</p>";
+        return;
+      }
+
+      meusChamados.forEach((c, i) => {
+        const div = document.createElement("div");
+        div.className = "chamado";
+        div.innerHTML = `
+          <div class="status-tag ${c.status}">${c.status}</div>
+          <strong>#${i+1}</strong><br>
+          <strong>${c.titulo}</strong><br>
+          <p>${c.descricao}</p>
+          <small>📍 ${c.local} &nbsp;&nbsp; ⚙️ ${c.categoria} &nbsp;&nbsp; ⚠️ ${c.prioridade} &nbsp;&nbsp; ⏰ ${c.data}</small><br>
+          <small>Criado por: ${c.aluno}</small>
+          <div class="actions">
+            <button class="edit" onclick="editarChamado(${i})">✏️</button>
+            <button class="delete" onclick="excluirChamado(${i})">🗑️</button>
+          </div>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    function editarChamado(i) {
+      const c = chamados[i];
+      document.getElementById('alunoNome').value = c.aluno;
+      document.getElementById('titulo').value = c.titulo;
+      document.getElementById('descricao').value = c.descricao;
+      document.getElementById('local').value = c.local;
+      document.getElementById('categoria').value = c.categoria;
+      document.getElementById('status').value = c.status;
+      editIndex = i;
+      document.getElementById('modalTitulo').textContent = "Editar Chamado";
+      modal.style.display = 'flex';
+    }
+
+    function excluirChamado(i) {
+      if (confirm("Deseja realmente excluir este chamado?")) {
+        chamados.splice(i, 1);
+        localStorage.setItem('chamados', JSON.stringify(chamados));
+        atualizarChamados();
+      }
+    }
+
+    window.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
+  </script>
+</body>
+</html>
