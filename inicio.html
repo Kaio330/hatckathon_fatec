@@ -3,234 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
   <title>Sistema de Chamados - Infraestrutura</title>
-  <style>
-    :root {
-      --primary: #0a0a23;
-      --bg: #f8f9fc;
-      --card-bg: #fff;
-      --border: #e3e6ed;
-      --text: #333;
-      --muted: #666;
-      --blue: #007bff;
-      --red: #e74c3c;
-      --yellow: #f1c40f;
-      --green: #27ae60;
-    }
-
-    * {
-      box-sizing: border-box;
-      font-family: "Segoe UI", Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      padding: 1rem;
-    }
-
-    header {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.7rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .logo {
-      background: #e8f1ff;
-      padding: 0.6rem;
-      border-radius: 8px;
-      font-size: 1.5rem;
-    }
-
-    header h1 { font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
-    header p { font-size: 0.85rem; color: var(--muted); }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 0.8rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1rem;
-      text-align: center;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-
-    .card p { font-size: 0.9rem; color: var(--muted); }
-    .card strong { font-size: 1.1rem; }
-
-    .btn {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 0.8rem 1rem;
-      cursor: pointer;
-      display: block;
-      margin: 0 auto 2rem;
-      font-size: 0.95rem;
-      transition: 0.3s;
-    }
-
-    .btn:hover { opacity: 0.9; }
-
-    .section {
-      background: var(--card-bg);
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      padding: 1.5rem;
-    }
-
-    .filters {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      margin-bottom: 1.5rem;
-    }
-
-    select {
-      padding: 0.6rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: #f9f9f9;
-    }
-
-    .empty {
-      text-align: center;
-      font-size: 0.9rem;
-      color: #999;
-      margin-top: 1rem;
-    }
-
-    /* ======= CHAMADOS ======= */
-    .chamado {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #fff;
-      padding: 1rem;
-      margin-bottom: 0.8rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-
-    .chamado-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-
-    .status {
-      padding: 0.3rem 0.6rem;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #fff;
-    }
-
-    .Aberto { background: var(--red); }
-    .EmAndamento { background: var(--blue); }
-    .Resolvido { background: var(--green); }
-
-    .chamado strong {
-      font-size: 1rem;
-      display: block;
-      margin-bottom: 0.2rem;
-    }
-
-    .descricao {
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .detalhes {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .detalhes span { display: flex; align-items: center; gap: 0.3rem; }
-
-    .criador {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 0.4rem;
-    }
-
-    .acoes {
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-
-    .acoes button {
-      border: none;
-      background: none;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    .acoes .edit { color: var(--blue); }
-    .acoes .delete { color: var(--red); }
-
-    /* ======= MODAL ======= */
-    .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-      display: none;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background: #fff;
-      padding: 1.5rem;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-    }
-
-    .modal-content input, .modal-content select, .modal-content textarea {
-      width: 100%;
-      margin-bottom: 0.8rem;
-      padding: 0.6rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 0.9rem;
-    }
-
-    .modal-content textarea { resize: vertical; height: 60px; }
-
-    .modal-content button {
-      width: 48%;
-      padding: 0.6rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .cancel { background: #ccc; }
-    .save { background: #0a0a23; color: #fff; }
-
-    @media (min-width: 700px) {
-      .filters { flex-direction: row; gap: 1rem; }
-    }
-  </style>
+  
 </head>
-<body>
+<body class="page-dashboard">
 
   <header>
     <div class="logo">📘</div>
@@ -283,7 +60,6 @@
     </div>
   </section>
 
-  <!-- MODAL -->
   <div class="modal" id="modal">
     <div class="modal-content">
       <h3 id="modalTitulo">Novo Chamado</h3>
@@ -316,139 +92,98 @@
     </div>
   </div>
 
-  <script>
+<script>
+    // --- 1. Selecionar TODOS os elementos ---
     const modal = document.getElementById('modal');
-    const lista = document.getElementById('listaChamados');
-    const total = document.getElementById('total');
-    const abertos = document.getElementById('abertos');
-    const andamento = document.getElementById('andamento');
-    const resolvidos = document.getElementById('resolvidos');
-    const salvarBtn = document.getElementById('salvar');
+    const listaChamados = document.getElementById('listaChamados');
+    
+    // Botões principais
+    const novoChamadoBtn = document.getElementById('novoChamadoBtn'); // O botão de abrir
+    const cancelarBtn = document.getElementById('cancelar');     // O botão de cancelar
+    const salvarBtn = document.getElementById('salvar');         // O botão de salvar
+    
+    // Campos do formulário
     const modalTitulo = document.getElementById('modalTitulo');
+    const tituloInput = document.getElementById('titulo');
+    const descricaoInput = document.getElementById('descricao');
+    // ... (adicione outros campos se precisar)
 
-    let chamados = [];
-    let editIndex = null;
-
-    function salvarChamados() {
-      localStorage.setItem('chamados', JSON.stringify(chamados));
-    }
-
-    function carregarChamados() {
-      const salvos = localStorage.getItem('chamados');
-      if (salvos) {
-        chamados = JSON.parse(salvos);
-        atualizarChamados();
-      }
-    }
-
-    document.getElementById('novoChamadoBtn').onclick = () => {
+    // --- 2. Funções para controlar o Modal ---
+    
+    /**
+     * Função para MOSTRAR o modal
+     * O CSS original tem "display: none".
+     * Nós mudamos o estilo direto para "display: flex" para mostrá-lo.
+     */
+    function abrirModal() {
       modal.style.display = 'flex';
-      modalTitulo.textContent = "Novo Chamado";
-      editIndex = null;
-      document.querySelectorAll('#modal input, #modal textarea, #modal select').forEach(e => e.value = '');
-    };
-    document.getElementById('cancelar').onclick = () => modal.style.display = 'none';
-    window.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
-
-    salvarBtn.onclick = () => {
-      const titulo = document.getElementById('titulo').value;
-      const descricao = document.getElementById('descricao').value;
-      const local = document.getElementById('local').value;
-      const categoria = document.getElementById('categoria').value;
-      const prioridade = document.getElementById('prioridade').value;
-      const status = document.getElementById('status').value;
-      const criador = document.getElementById('criador').value;
-
-      if (!titulo) return alert('Informe o título do chamado!');
-
-      if (editIndex !== null) {
-        chamados[editIndex] = { ...chamados[editIndex], titulo, descricao, local, categoria, prioridade, status, criador };
-      } else {
-        const data = new Date().toLocaleString();
-        chamados.push({ titulo, descricao, local, categoria, prioridade, status, criador, data });
-      }
-
-      salvarChamados();
+    }
+    
+    /**
+     * Função para ESCONDER o modal
+     */
+    function fecharModal() {
       modal.style.display = 'none';
-      atualizarChamados();
-    };
-
-    function editarChamado(index) {
-      const c = chamados[index];
-      document.getElementById('titulo').value = c.titulo;
-      document.getElementById('descricao').value = c.descricao;
-      document.getElementById('local').value = c.local;
-      document.getElementById('categoria').value = c.categoria;
-      document.getElementById('prioridade').value = c.prioridade;
-      document.getElementById('status').value = c.status;
-      document.getElementById('criador').value = c.criador;
-      modalTitulo.textContent = "Editar Chamado";
-      modal.style.display = 'flex';
-      editIndex = index;
+      
+      // Opcional: Limpar o formulário ao fechar
+      modalTitulo.innerText = "Novo Chamado";
+      tituloInput.value = "";
+      descricaoInput.value = "";
+      // ... limpar outros campos
     }
 
-    function excluirChamado(index) {
-      if (confirm("Tem certeza que deseja excluir este chamado?")) {
-        chamados.splice(index, 1);
-        salvarChamados();
-        atualizarChamados();
-      }
-    }
+    // --- 3. Adicionar os "Ouvintes" de Eventos (O QUE FALTAVA) ---
+    
+    // Quando o botão "+ Abrir Novo Chamado" for clicado, chame a função abrirModal
+    novoChamadoBtn.addEventListener('click', abrirModal);
 
-    function atualizarChamados() {
-      lista.innerHTML = "";
-      const fs = document.getElementById('filterStatus').value;
-      const fc = document.getElementById('filterCategoria').value;
-      const fp = document.getElementById('filterPrioridade').value;
+    // Quando o botão "Cancelar" for clicado, chame a função fecharModal
+    cancelarBtn.addEventListener('click', fecharModal);
 
-      const filtrados = chamados.filter(c =>
-        (fs === "todos" || c.status === fs) &&
-        (fc === "todas" || c.categoria === fc) &&
-        (fp === "todas" || c.prioridade === fp)
-      );
+    // Quando o botão "Salvar" for clicado...
+    salvarBtn.addEventListener('click', () => {
+      // (Aqui vai a sua lógica para salvar o chamado, por exemplo, no localStorage)
+      
+      // Simplesmente para teste:
+      console.log("Título:", tituloInput.value);
+      console.log("Descrição:", descricaoInput.value);
+      alert("Chamado salvo! (Veja o console para detalhes)"); 
+      
+      fecharModal(); // Fecha o modal depois de salvar
+      carregarChamados(); // Atualiza a lista
+    });
 
-      if (filtrados.length === 0) {
-        lista.className = "empty";
-        lista.textContent = "Nenhum chamado encontrado com os filtros selecionados.";
+
+    // --- 4. Funções Principais do App ---
+
+    /**
+     * Função para carregar/renderizar os chamados
+     * (Você precisa implementar a lógica de buscar do localStorage ou API)
+     */
+    function carregarChamados() {
+      // Limpa a lista antes de carregar
+      listaChamados.innerHTML = ""; 
+      
+      // ... (Sua lógica para buscar dados e criar os cards) ...
+      
+      // Exemplo de como mostrar/esconder a msg "Nenhum chamado"
+      // Se, após buscar os dados, a lista estiver vazia:
+      const temChamados = listaChamados.querySelector('.chamado');
+      
+      if (!temChamados) {
+        listaChamados.classList.add('empty');
+        listaChamados.innerHTML = '<div class="empty">Nenhum chamado encontrado.</div>';
       } else {
-        lista.className = "";
-        filtrados.forEach((c, index) => {
-          const div = document.createElement("div");
-          div.className = "chamado";
-          div.innerHTML = `
-            <div class="chamado-header">
-              <span><strong>#${index + 1}</strong></span>
-              <span class="status ${c.status.replace(' ', '')}">${c.status}</span>
-            </div>
-            <strong>${c.titulo}</strong>
-            <p class="descricao">${c.descricao || "—"}</p>
-            <div class="detalhes">
-              <span>📍 ${c.local || "Local não informado"}</span>
-              <span>⚙️ ${c.categoria}</span>
-              <span>⚠️ ${c.prioridade}</span>
-              <span>⏰ ${c.data}</span>
-            </div>
-            <p class="criador">Criado por: ${c.criador || "Anônimo"}</p>
-            <div class="acoes">
-              <button class="edit" onclick="editarChamado(${index})">✏️</button>
-              <button class="delete" onclick="excluirChamado(${index})">🗑️</button>
-            </div>
-          `;
-          lista.appendChild(div);
-        });
+        listaChamados.classList.remove('empty');
       }
-
-      total.textContent = chamados.length;
-      abertos.textContent = chamados.filter(c => c.status === "Aberto").length;
-      andamento.textContent = chamados.filter(c => c.status === "Em Andamento").length;
-      resolvidos.textContent = chamados.filter(c => c.status === "Resolvido").length;
     }
 
-    document.getElementById('filterStatus').onchange = atualizarChamados;
-    document.getElementById('filterCategoria').onchange = atualizarChamados;
-    document.getElementById('filterPrioridade').onchange = atualizarChamados;
-
+    // --- 5. Inicialização ---
+    // Carrega os chamados assim que a página abre
     carregarChamados();
+
   </script>
+</body>
+</html>
 </body>
 </html>
