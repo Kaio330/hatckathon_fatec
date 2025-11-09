@@ -122,6 +122,12 @@
     </div>
   </div>
 
+  <!-- Image Modal -->
+  <div id="imageModal" class="modal">
+    <span class="close-image-modal">&times;</span>
+    <img class="modal-content" id="modalImage">
+  </div>
+
   <script>
     const modal = document.getElementById('modal');
     const lista = document.getElementById('listaChamados');
@@ -131,6 +137,10 @@
     const resolvidos = document.getElementById('resolvidos');
     const salvarBtn = document.getElementById('salvar');
     const modalTitulo = document.getElementById('modalTitulo');
+
+    const imageModal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const closeImageModal = document.querySelector('.close-image-modal');
 
     let chamados = [];
     let editIndex = null;
@@ -281,6 +291,18 @@
       localStorage.removeItem('currentUser');
       window.location.href = 'home.html';
     });
+
+    // --- Image Modal Logic ---
+    lista.addEventListener('click', function(e) {
+      if (e.target.classList.contains('chamado-anexo')) {
+        imageModal.style.display = 'flex';
+        modalImage.src = e.target.src;
+      }
+    });
+
+    closeImageModal.onclick = function() {
+      imageModal.style.display = 'none';
+    }
 
     carregarChamados();
 

@@ -387,9 +387,10 @@ header p {
 
 .modal {
   position: fixed;
+  z-index: 1000; /* Garante que o modal fique sobre todos os outros elementos */
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.7); /* Escurece um pouco mais para melhor contraste */
   display: none;
   justify-content: center;
   align-items: center;
@@ -477,4 +478,50 @@ header p {
 
 .modal-buttons .cancel:hover {
   background: #e0e0e0;
+}
+
+/* --- Image Modal Styles --- */
+
+#imageModal .modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  background: transparent; /* Remove o fundo branco do modal de formulário */
+  box-shadow: none;
+}
+
+#imageModal .modal-content {
+  animation-name: zoom;
+  animation-duration: 0.3s;
+}
+
+@keyframes zoom {
+  from {transform: scale(0)}
+  to {transform: scale(1)}
+}
+
+.close-image-modal {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #fff;
+  font-size: 45px;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+  z-index: 1001; /* Garante que fique sobre a imagem */
+}
+
+.close-image-modal:hover,
+.close-image-modal:focus {
+  color: #bbb;
+  text-decoration: none;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 700px) {
+  #imageModal .modal-content {
+    width: 100%;
+  }
 }
