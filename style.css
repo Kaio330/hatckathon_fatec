@@ -125,6 +125,14 @@ header {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+  gap: 1rem;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .logo {
@@ -233,6 +241,13 @@ header p {
   border: 1px solid #ddd;
   border-radius: 8px;
   flex: 1;
+  min-width: 180px; /* Prevent shrinking too much */
+}
+
+@media (max-width: 600px) {
+  .filters {
+    flex-direction: column;
+  }
 }
 
 .chamado {
