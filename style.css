@@ -404,6 +404,8 @@ header p {
   max-width: 550px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
   text-align: center;
+  max-height: 90vh; /* Limita a altura a 90% da altura da tela */
+  overflow-y: auto; /* Adiciona uma barra de rolagem se o conteúdo for muito grande */
 }
 
 #modalTitulo {
