@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Chamados - Infraestrutura</title>
+  <title>Sistema de Chamados - Painel do Aluno</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 </head>
@@ -13,8 +13,8 @@
     <div class="header-content">
       <div class="logo">📘</div>
       <div>
-        <h1>Painel de Chamados</h1>
-        <p>Gerenciamento de Infraestrutura</p>
+        <h1>Meu Painel de Chamados</h1>
+        <p id="studentEmail"></p>
       </div>
     </div>
     <button class="logout-btn" id="logoutBtn">Sair</button>
@@ -54,7 +54,7 @@
   <button class="btn" id="novoChamadoBtn">+ Abrir Novo Chamado</button>
 
   <section class="section">
-    <h2>Chamados</h2>
+    <h2>Meus Chamados</h2>
 
     <div class="filters">
       <select id="filterStatus">
@@ -73,17 +73,10 @@
         <option value="Hidráulica">Hidráulica</option>
         <option value="Climatização">Climatização</option>
       </select>
-
-      <select id="filterPrioridade">
-        <option value="todas">Todas as Prioridades</option>
-        <option value="Baixa">Baixa</option>
-        <option value="Média">Média</option>
-        <option value="Alta">Alta</option>
-      </select>
     </div>
 
     <div id="listaChamados" class="empty">
-      Nenhum chamado encontrado com os filtros selecionados.
+      Você ainda não abriu nenhum chamado.
     </div>
   </section>
 
@@ -102,19 +95,8 @@
         <option value="Hidráulica">Hidráulica</option>
         <option value="Climatização">Climatização</option>
       </select>
-      <select id="prioridade">
-        <option value="Baixa">Baixa</option>
-        <option value="Média">Média</option>
-        <option value="Alta">Alta</option>
-      </select>
-      <select id="status">
-        <option value="Aberto">Aberto</option>
-        <option value="Em Andamento">Em Andamento</option>
-        <option value="Resolvido">Resolvido</option>
-      </select>
       <label for="anexo" style="text-align: left; margin-top: 1rem;">Anexar Imagem (Opcional)</label>
       <input type="file" id="anexo" accept="image/*">
-      <input type="text" id="criador" placeholder="Criado por (ex: João Silva)">
       <div class="modal-buttons">
         <button class="cancel" id="cancelar">Cancelar</button>
         <button class="save" id="salvar">Salvar</button>
@@ -137,13 +119,19 @@
     const resolvidos = document.getElementById('resolvidos');
     const salvarBtn = document.getElementById('salvar');
     const modalTitulo = document.getElementById('modalTitulo');
+    const studentEmailEl = document.getElementById('studentEmail');
 
     const imageModal = document.getElementById('imageModal');
     const modalImage = document.getElementById('modalImage');
     const closeImageModal = document.querySelector('.close-image-modal');
 
     let chamados = [];
-    let editIndex = null;
+    const currentUserEmail = localStorage.getItem('currentUser');
+    if (!currentUserEmail) {
+        window.location.href = 'home.html';
+    } else {
+        studentEmailEl.textContent = `Logado como: ${currentUserEmail}`;
+    }
 
     function salvarChamados() {
       localStorage.setItem('chamados', JSON.stringify(chamados));
@@ -160,7 +148,6 @@
     document.getElementById('novoChamadoBtn').onclick = () => {
       modal.style.display = 'flex';
       modalTitulo.textContent = "Novo Chamado";
-      editIndex = null;
       document.querySelectorAll('#modal input, #modal textarea, #modal select').forEach(e => e.value = '');
     };
     document.getElementById('cancelar').onclick = () => modal.style.display = 'none';
@@ -171,9 +158,6 @@
       const descricao = document.getElementById('descricao').value;
       const local = document.getElementById('local').value;
       const categoria = document.getElementById('categoria').value;
-      const prioridade = document.getElementById('prioridade').value;
-      const status = document.getElementById('status').value;
-      const criador = document.getElementById('criador').value;
       const anexoInput = document.getElementById('anexo');
       const anexoFile = anexoInput.files[0];
 
@@ -181,21 +165,19 @@
 
       const salvarChamadoNoSistema = (anexoBase64 = null) => {
         const chamado = {
-          titulo, descricao, local, categoria, prioridade, status, criador,
+          titulo, descricao, local, categoria,
+          prioridade: 'Não definida', // Prioridade padrão
+          status: 'Aberto', // Status padrão
+          criador: currentUserEmail,
           anexo: anexoBase64,
           data: new Date().toLocaleString()
         };
 
-        if (editIndex !== null) {
-          chamados[editIndex] = { ...chamados[editIndex], ...chamado };
-        } else {
-          chamados.push(chamado);
-        }
-
+        chamados.push(chamado);
         salvarChamados();
         modal.style.display = 'none';
         atualizarChamados();
-        anexoInput.value = ''; // Limpa o campo de anexo
+        anexoInput.value = '';
       };
 
       if (anexoFile) {
@@ -205,42 +187,20 @@
         };
         reader.readAsDataURL(anexoFile);
       } else {
-        salvarChamadoNoSistema(editIndex !== null ? chamados[editIndex].anexo : null);
+        salvarChamadoNoSistema(null);
       }
     };
-
-    function editarChamado(index) {
-      const c = chamados[index];
-      document.getElementById('titulo').value = c.titulo;
-      document.getElementById('descricao').value = c.descricao;
-      document.getElementById('local').value = c.local;
-      document.getElementById('categoria').value = c.categoria;
-      document.getElementById('prioridade').value = c.prioridade;
-      document.getElementById('status').value = c.status;
-      document.getElementById('criador').value = c.criador;
-      modalTitulo.textContent = "Editar Chamado";
-      modal.style.display = 'flex';
-      editIndex = index;
-    }
-
-    function excluirChamado(index) {
-      if (confirm("Tem certeza que deseja excluir este chamado?")) {
-        chamados.splice(index, 1);
-        salvarChamados();
-        atualizarChamados();
-      }
-    }
 
     function atualizarChamados() {
       lista.innerHTML = "";
       const fs = document.getElementById('filterStatus').value;
       const fc = document.getElementById('filterCategoria').value;
-      const fp = document.getElementById('filterPrioridade').value;
 
-      const filtrados = chamados.filter(c =>
+      const meusChamados = chamados.filter(c => c.criador === currentUserEmail);
+
+      const filtrados = meusChamados.filter(c =>
         (fs === "todos" || c.status === fs) &&
-        (fc === "todas" || c.categoria === fc) &&
-        (fp === "todas" || c.prioridade === fp)
+        (fc === "todas" || c.categoria === fc)
       );
 
       if (filtrados.length === 0) {
@@ -248,14 +208,14 @@
         lista.textContent = "Nenhum chamado encontrado com os filtros selecionados.";
       } else {
         lista.className = "";
-        filtrados.forEach((c, index) => {
+        filtrados.forEach((c, globalIndex) => {
           const div = document.createElement("div");
           div.className = "chamado";
           const anexoHtml = c.anexo ? `<img src="${c.anexo}" alt="Anexo" class="chamado-anexo">` : '';
 
           div.innerHTML = `
             <div class="chamado-header">
-              <span><strong>#${index + 1}</strong></span>
+              <span><strong>#${globalIndex + 1}</strong></span>
               <span class="status ${c.status.replace(' ', '')}">${c.status}</span>
             </div>
             <strong>${c.titulo}</strong>
@@ -267,32 +227,27 @@
               <span>⚠️ ${c.prioridade}</span>
               <span>⏰ ${c.data}</span>
             </div>
-            <p class="criador">Criado por: ${c.criador || "Anônimo"}</p>
-            <div class="acoes">
-              <button class="edit" onclick="editarChamado(${index})">✏️</button>
-              <button class="delete" onclick="excluirChamado(${index})">🗑️</button>
-            </div>
+            <p class="criador">Criado por: Você</p>
           `;
           lista.appendChild(div);
         });
       }
 
-      total.textContent = chamados.length;
-      abertos.textContent = chamados.filter(c => c.status === "Aberto").length;
-      andamento.textContent = chamados.filter(c => c.status === "Em Andamento").length;
-      resolvidos.textContent = chamados.filter(c => c.status === "Resolvido").length;
+      total.textContent = meusChamados.length;
+      abertos.textContent = meusChamados.filter(c => c.status === "Aberto").length;
+      andamento.textContent = meusChamados.filter(c => c.status === "Em Andamento").length;
+      resolvidos.textContent = meusChamados.filter(c => c.status === "Resolvido").length;
     }
 
     document.getElementById('filterStatus').onchange = atualizarChamados;
     document.getElementById('filterCategoria').onchange = atualizarChamados;
-    document.getElementById('filterPrioridade').onchange = atualizarChamados;
 
     document.getElementById('logoutBtn').addEventListener('click', () => {
       localStorage.removeItem('currentUser');
       window.location.href = 'home.html';
     });
 
-    // --- Image Modal Logic ---
+    // --- Lógica do Modal de Imagem ---
     lista.addEventListener('click', function(e) {
       if (e.target.classList.contains('chamado-anexo')) {
         imageModal.style.display = 'flex';
