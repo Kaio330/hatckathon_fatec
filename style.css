@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* * ===============================================
  * ESTILOS GLOBAIS E VARIÁVEIS
  * ===============================================
@@ -17,10 +18,30 @@
 }
 
 /* ======== RESET UNIVERSAL ======== */
+=======
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary-color: #6a5acd;
+  --secondary-color: #f0f2f5;
+  --text-color: #333;
+  --white: #fff;
+  --danger: #e74c3c;
+  --success: #2ecc71;
+  --warning: #f1c40f;
+  --font-family: 'Poppins', sans-serif;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --border-radius: 12px;
+}
+
+>>>>>>> d78aae041ef8cc85b20ce75830d64f7d3a859f28
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+<<<<<<< HEAD
   font-family: "Segoe UI", Arial, sans-serif;
 }
 
@@ -31,12 +52,25 @@
 
 body.page-login {
   background: #e8f1ff;
+=======
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.login-page {
+>>>>>>> d78aae041ef8cc85b20ce75830d64f7d3a859f28
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
 
+<<<<<<< HEAD
 .page-login .login-container {
   background: #fff;
   padding: 2rem;
@@ -235,12 +269,239 @@ body.page-dashboard {
 }
 
 .page-dashboard .chamado-header {
+=======
+.login-container {
+  background: var(--white);
+  padding: 2.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+}
+
+.login-container h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.login-container .subtitle {
+  color: #888;
+  margin-bottom: 2rem;
+}
+
+.tabs {
+  display: flex;
+  background-color: #eee;
+  border-radius: 25px;
+  margin-bottom: 1.5rem;
+  padding: 4px;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.7rem 0;
+  border-radius: 25px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+form label {
+  display: block;
+  text-align: left;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+form input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+form input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+button[type="submit"] {
+  background: var(--primary-color);
+  color: var(--white);
+  border: none;
+  padding: 0.9rem;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background: #5a4ab9;
+}
+
+.main-page {
+  padding: 2rem;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+  gap: 1rem;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  font-size: 2rem;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+header p {
+  color: #777;
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: var(--danger);
+  color: var(--white);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background: var(--white);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  text-align: left;
+}
+
+.card p {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.card strong {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.btn#novoChamadoBtn {
+  display: block;
+  width: 100%;
+  background: var(--primary-color);
+  color: var(--white);
+  border: none;
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius);
+  font-size: 1.05rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+  box-shadow: var(--box-shadow);
+}
+
+.btn#novoChamadoBtn:hover {
+  background: #5a4ab9;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+/* On larger screens, the button won't be full-width */
+@media (min-width: 768px) {
+  .btn#novoChamadoBtn {
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.section {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filters select {
+  padding: 0.7rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  flex: 1;
+  min-width: 180px; /* Prevent shrinking too much */
+}
+
+@media (max-width: 600px) {
+  .filters {
+    flex-direction: column;
+  }
+}
+
+.chamado {
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  border-left: 5px solid var(--primary-color);
+}
+
+.chamado-header {
+>>>>>>> d78aae041ef8cc85b20ce75830d64f7d3a859f28
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
 }
 
+<<<<<<< HEAD
 .page-dashboard .status {
   padding: 0.3rem 0.6rem;
   border-radius: 8px;
@@ -304,11 +565,59 @@ body.page-dashboard {
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: rgba(0,0,0,0.4);
+=======
+.status {
+  padding: 0.4rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.Aberto { background: var(--danger); }
+.EmAndamento { background: var(--warning); color: #333; }
+.Resolvido { background: var(--success); }
+
+.chamado strong {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.chamado .descricao {
+  color: #666;
+  margin: 0.5rem 0 1rem;
+}
+
+.detalhes {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.acoes button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.acoes .edit:hover { color: var(--primary-color); }
+.acoes .delete:hover { color: var(--danger); }
+
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+>>>>>>> d78aae041ef8cc85b20ce75830d64f7d3a859f28
   display: none;
   justify-content: center;
   align-items: center;
 }
 
+<<<<<<< HEAD
 .page-dashboard .modal-content {
   background: #fff;
   padding: 1.5rem;
@@ -344,3 +653,81 @@ body.page-dashboard {
 .page-dashboard @media (min-width: 700px) {
   .filters { flex-direction: row; gap: 1rem; }
 }
+=======
+.modal-content {
+  background: var(--white);
+  padding: 2.5rem;
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 550px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+#modalTitulo {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.modal-content input:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px rgba(106, 90, 205, 0.3);
+}
+
+.modal-content textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.modal-buttons button {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-buttons .save {
+  background: var(--primary-color);
+  color: var(--white);
+}
+
+.modal-buttons .save:hover {
+  background: #5a4ab9;
+}
+
+.modal-buttons .cancel {
+  background: #f0f0f0;
+  color: #555;
+}
+
+.modal-buttons .cancel:hover {
+  background: #e0e0e0;
+}
+>>>>>>> d78aae041ef8cc85b20ce75830d64f7d3a859f28
